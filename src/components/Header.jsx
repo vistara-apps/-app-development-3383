@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { MessageSquare, Calendar, Users, Heart, CreditCard, Home, Menu, X, Sparkles } from 'lucide-react'
+import { useUser } from '../context/UserContext'
+import { MessageSquare, Calendar, Users, Heart, CreditCard, Home, Menu, X, Sparkles, RotateCcw } from 'lucide-react'
 
 const Header = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { resetOnboarding } = useUser()
   
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
@@ -68,6 +70,16 @@ const Header = () => {
             </div>
             
             <ConnectButton />
+            
+            {/* Reset Onboarding Button (for testing) */}
+            <button
+              onClick={resetOnboarding}
+              className="hidden md:flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Reset Onboarding (for testing)"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>Reset</span>
+            </button>
             
             {/* Mobile menu button */}
             <button

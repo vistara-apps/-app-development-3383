@@ -15,6 +15,11 @@ export const UserProvider = ({ children }) => {
   const [posts, setPosts] = useState([])
   const [connections, setConnections] = useState([])
   const [isSubscribed, setIsSubscribed] = useState(false)
+  
+  // Onboarding state
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false)
+  const [connectedSocialAccounts, setConnectedSocialAccounts] = useState([])
+  const [onboardingStep, setOnboardingStep] = useState(0)
 
   // Mock user data for demo
   useEffect(() => {
@@ -70,6 +75,24 @@ export const UserProvider = ({ children }) => {
     setPosts(prev => [{ ...newPost, id: Date.now() }, ...prev])
   }
 
+  const connectSocialAccount = (platform, accountData) => {
+    setConnectedSocialAccounts(prev => [
+      ...prev.filter(acc => acc.platform !== platform),
+      { platform, ...accountData, connectedAt: new Date().toISOString() }
+    ])
+  }
+
+  const completeOnboarding = () => {
+    setHasCompletedOnboarding(true)
+    setOnboardingStep(0)
+  }
+
+  const resetOnboarding = () => {
+    setHasCompletedOnboarding(false)
+    setOnboardingStep(0)
+    setConnectedSocialAccounts([])
+  }
+
   const value = {
     user,
     setUser,
@@ -79,7 +102,17 @@ export const UserProvider = ({ children }) => {
     connections,
     setConnections,
     isSubscribed,
-    setIsSubscribed
+    setIsSubscribed,
+    // Onboarding
+    hasCompletedOnboarding,
+    setHasCompletedOnboarding,
+    connectedSocialAccounts,
+    setConnectedSocialAccounts,
+    onboardingStep,
+    setOnboardingStep,
+    connectSocialAccount,
+    completeOnboarding,
+    resetOnboarding
   }
 
   return (

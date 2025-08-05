@@ -5,7 +5,7 @@ import { MessageSquare, Calendar, Users, Heart, TrendingUp, Clock, ArrowUpRight,
 import EmptyState from '../components/EmptyState'
 
 const Dashboard = () => {
-  const { user, posts } = useUser()
+  const { user, posts, connectedSocialAccounts } = useUser()
 
   const features = [
     {
@@ -144,6 +144,53 @@ const Dashboard = () => {
           )
         })}
       </div>
+
+      {/* Connected Accounts */}
+      {connectedSocialAccounts.length > 0 && (
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Connected Accounts</h2>
+            <Link to="/onboarding" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+              Manage Connections
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {connectedSocialAccounts.map((account, index) => (
+              <div
+                key={account.platform}
+                className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition-all duration-300"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-gray-600 capitalize">
+                        {account.platform.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900 capitalize">{account.platform}</h3>
+                      <p className="text-sm text-gray-500">{account.username}</p>
+                    </div>
+                  </div>
+                  <div className="bg-green-100 p-1.5 rounded-full">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
+                </div>
+                
+                {account.followers && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <p className="text-xs text-gray-500">
+                      {account.followers.toLocaleString()} followers
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Feature Grid */}
       <div className="mb-12">
