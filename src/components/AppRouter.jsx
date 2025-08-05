@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import Header from './Header'
@@ -11,16 +11,40 @@ import Subscription from '../pages/Subscription'
 import Onboarding from '../pages/Onboarding'
 
 const AppRouter = () => {
-  const { hasCompletedOnboarding } = useUser()
+  const { hasCompletedOnboarding, completeOnboarding } = useUser()
+  const [showOnboarding, setShowOnboarding] = useState(false)
 
-  // If user hasn't completed onboarding, redirect to onboarding
-  if (!hasCompletedOnboarding) {
-    return (
-      <Routes>
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="*" element={<Navigate to="/onboarding" replace />} />
-      </Routes>
-    )
+  useEffect(() => {
+    // Check if user has completed onboarding using our comprehensive system
+    const savedOnboarding = localStorage.getItem('reply_assist_onboarding')
+    if (!savedOnboarding) {
+      setShowOnboarding(true)
+    } else {
+      try {
+        const parsed = JSON.parse(savedOnboarding)
+        if (!parsed.completed) {
+          setShowOnboarding(true)
+        } else {
+          // Sync with UserContext if onboarding was completed
+          if (!hasCompletedOnboarding) {
+            completeOnboarding()
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing onboarding data:', error)
+        setShowOnboarding(true)
+      }
+    }
+  }, [hasCompletedOnboarding, completeOnboarding])
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+    completeOnboarding()
+  }
+
+  // If user hasn't completed onboarding, show our comprehensive onboarding
+  if (showOnboarding || !hasCompletedOnboarding) {
+    return <Onboarding onComplete={handleOnboardingComplete} />
   }
 
   // Main app routes for users who have completed onboarding
@@ -43,4 +67,3 @@ const AppRouter = () => {
 }
 
 export default AppRouter
-
