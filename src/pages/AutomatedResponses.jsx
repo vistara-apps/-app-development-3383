@@ -143,11 +143,12 @@ const AutomatedResponses = () => {
                       <span>Generating responses...</span>
                     </>
                   ) : (
-                  <>
-                    <Send className="h-4 w-4" />
-                    <span>Generate Responses</span>
-                  </>
-                )}
+                    <>
+                      <Send className="h-4 w-4" />
+                      <span>Generate Responses</span>
+                    </>
+                  )}
+                </div>
               </button>
 
               {error && (
